@@ -4,13 +4,13 @@ from sklearn.model_selection import train_test_split
 
 RAW_PATH = "../data/sudoku_pq/sudoku.parquet"
 
+def data_trans(df):
+    return np.array([np.uint(i) for i in df])
+
 def read_data(path):
 
     df = pd.read_parquet(path)
-
-    for col in df:
-        for row in range(len(df)):
-            df[col][row] = np.array([np.uint(i) for i in df[col][row]])
+    df = df.apply(data_trans, axis=1)
 
     return df
 
