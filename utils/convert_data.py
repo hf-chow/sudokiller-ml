@@ -2,19 +2,29 @@ import pandas as pd
 import numpy as np 
 from sklearn.model_selection import train_test_split
 
+"""
+Instead of doing the reshape to 1x9x9 numpy array in memory, it would be faster
+(and more hacky) to do it before the training
+"""
+
+
 RAW_PATH = "../data/sudoku/sudoku_pq/sudoku.parquet"
 TRAIN_DATA_PATH = "../data/sudoku/sudoku_pq_train_data.parquet"
 TRAIN_LABEL_PATH = "../data/sudoku/sudoku_pq_train_label.parquet"
 TEST_DATA_PATH = "../data/sudoku/sudoku_pq_test_data.parquet"
 TEST_LABEL_PATH = "../data/sudoku/sudoku_pq_test_label.parquet"
 
-def data_trans(df):
-    return np.array([np.uint(i) for i in df])
+def train_trans(df):
+    return np.array([np.uint(i) for i in df]).reshape((1,9,9))
+
+def test_trans(df):
+    return np.array([np.uint(i) for i in df]).reshape((9,9))
 
 def read_data(path):
 
     df = pd.read_parquet(path)
-    df = df.applymap(data_trans)
+    df["puzzle"] = df["puzzle"].apply(train_trans)
+    df["solution"] = df["solution"].apply(test_trans)
 
     return df
 
