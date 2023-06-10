@@ -3,10 +3,10 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 RAW_PATH = "../data/sudoku/sudoku_pq/sudoku.parquet"
-TRAIN_DATA_PATH = "../data/sudoku_pq/sudoku_pq_train_data.parquet"
-TRAIN_LABEL_PATH = "../data/sudoku_pq/sudoku_pq_train_label.parquet"
-TEST_DATA_PATH = "../data/sudoku_pq/sudoku_pq_test_data.parquet"
-TEST_LABEL_PATH = "../data/sudoku_pq/sudoku_pq_test_label.parquet"
+TRAIN_DATA_PATH = "../data/sudoku/sudoku_pq_train_data.parquet"
+TRAIN_LABEL_PATH = "../data/sudoku/sudoku_pq_train_label.parquet"
+TEST_DATA_PATH = "../data/sudoku/sudoku_pq_test_data.parquet"
+TEST_LABEL_PATH = "../data/sudoku/sudoku_pq_test_label.parquet"
 
 def data_trans(df):
     return np.array([np.uint(i) for i in df])
@@ -57,5 +57,5 @@ def convert_to_nparray(src=RAW_PATH, train_data_dst=TRAIN_DATA_PATH,
     df_test_data.to_parquet(test_data_dst)
     df_test_label.to_parquet(test_label_dst)
 
-convert_to_nparray()
-
+if __name__ == "__main__":
+    convert_to_nparray()
