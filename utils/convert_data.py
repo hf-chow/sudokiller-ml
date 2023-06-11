@@ -9,10 +9,10 @@ Instead of doing the reshape to 1x9x9 numpy array in memory, it would be faster
 
 
 RAW_PATH = "../data/sudoku/sudoku_pq/sudoku.parquet"
-TRAIN_DATA_PATH = "../data/sudoku/sudoku_pq_train_data.parquet"
-TRAIN_LABEL_PATH = "../data/sudoku/sudoku_pq_train_label.parquet"
-TEST_DATA_PATH = "../data/sudoku/sudoku_pq_test_data.parquet"
-TEST_LABEL_PATH = "../data/sudoku/sudoku_pq_test_label.parquet"
+TRAIN_DATA_PATH = "../data/sudoku/sudoku_pq_train_data.csv"
+TRAIN_LABEL_PATH = "../data/sudoku/sudoku_pq_train_label.csv"
+TEST_DATA_PATH = "../data/sudoku/sudoku_pq_test_data.csv"
+TEST_LABEL_PATH = "../data/sudoku/sudoku_pq_test_label.csv"
 
 def train_trans(df):
     return np.array([np.uint(i) for i in df]).reshape((1,9,9))
@@ -23,6 +23,7 @@ def test_trans(df):
 def read_data(path):
 
     df = pd.read_parquet(path)
+    df["id"] = range(len(df))
     df["puzzle"] = df["puzzle"].apply(train_trans)
     df["solution"] = df["solution"].apply(test_trans)
 
@@ -53,7 +54,7 @@ def convert_to_nparray(src=RAW_PATH, train_data_dst=TRAIN_DATA_PATH,
                        test_data_dst=TEST_DATA_PATH,
                        test_label_dst=TEST_LABEL_PATH):
 
-    print("Saving results as parquet file")
+    print("Saving results as csv file")
 
     X_train, X_test, y_train, y_test = fetch_data(src)
 
@@ -62,10 +63,10 @@ def convert_to_nparray(src=RAW_PATH, train_data_dst=TRAIN_DATA_PATH,
     df_test_data = pd.DataFrame({"puzzle": X_test})
     df_test_label = pd.DataFrame({"solution": y_test})
 
-    df_train_data.to_parquet(train_data_dst)
-    df_train_label.to_parquet(train_label_dst)
-    df_test_data.to_parquet(test_data_dst)
-    df_test_label.to_parquet(test_label_dst)
+    df_train_data.to_csv(train_data_dst)
+    df_train_label.to_csv(train_label_dst)
+    df_test_data.to_csv(test_data_dst)
+    df_test_label.to_csv(test_label_dst)
 
 if __name__ == "__main__":
     convert_to_nparray()
